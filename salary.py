@@ -1,6 +1,5 @@
-hours_worked = int(input("Enter hour of work this week: "))
-
 # Outputs
+extra_hours = 0
 standard_amount = 0
 ovr_time_amount = 0
 gross_pay = 0
@@ -9,54 +8,54 @@ net_pay = 0
 
 
 # Constants
-STA_WORK_WEEK = 39 # Standard hour working per week
-STA_PAY_RATE = 35 # Standard pay rate per hour
-OVER_TIME_PAY = 50 # 50 euro additional hour
-TAX_RATE = 0.21  # 21% Vat Rate
-YEARLY_SALARY = 18000
+STA_WORK_WEEK_HRS = 39  # Standard hour working per week
+STA_PAY_RATE = 35  # Standard pay rate per hour
+OVER_TIME_PAY = 50  # 50 euro additional hour
+VAT_RATE = 0.21  # 21% Vat Rate
+TAX_EXCLUSIVE = 18000
 
 # Assumed Constants
 WORKED_WEEK = 52   # Weeks in a year
-OVER_TIME = 1 # 1 Hour
 
 # Algorithm
 
-standard_amount = STA_PAY_RATE * hours_worked
 
-ovr_time_amount = OVER_TIME * OVER_TIME_PAY
+# pay = STA_WORK_WEEK_HRS * STA_PAY_RATE
+# gross_per_year = pay * 52
+# annual_salary = gross_per_year
+def computeGrossPay(h):
+    if hours_worked >= 0:
+        if hours_worked <= 39:
+            standard_amount = hours_worked * STA_PAY_RATE
+            grossPay = standard_amount           
+        elif hours_worked >= 39:
+            extra_hours = hours_worked - 39
+            ovr_time_amount = extra_hours * 50 
+            grossPay = STA_WORK_WEEK_HRS * STA_PAY_RATE + ovr_time_amount
+    return grossPay
 
 
-weekly_pay = standard_amount + ovr_time_amount  # Before Tax
-weekly_tax = weekly_pay * TAX_RATE  # After Tax
+# Inputs
+hours_worked = float(input("Enter hour of work this week: "))
 
-yearly_pay = weekly_pay * WORKED_WEEK     # Annual Salary
-over_threshold = yearly_pay / WORKED_WEEK  # Need Tax
-print(over_threshold)
+gross_pay = computeGrossPay((hours_worked))
 
-tax_threshold = round(YEARLY_SALARY / WORKED_WEEK)  # No Tax
-print(tax_threshold)
+yearly_pay = gross_pay * WORKED_WEEK     # Annual Salary
 
-
-if OVER_TIME:
-    gross_pay = standard_amount + ovr_time_amount
-    if gross_pay > tax_threshold:
-        total_tax = (gross_pay - tax_threshold) * TAX_RATE
-        net_pay = gross_pay - total_tax
-    else:
-        total_tax = 0
-
+if yearly_pay <= 18000:
+    total_tax = 0
+    net_pay = gross_pay
 else:
-    gross_pay = standard_amount - ovr_time_amount
-    if gross_pay > tax_threshold:
-        total_tax = (gross_pay - tax_threshold) * TAX_RATE
-        net_pay = gross_pay - total_tax
-    else:
-        total_tax = 0
+    total_tax = gross_pay * VAT_RATE
+    net_pay = gross_pay - total_tax
 
+# Results
 
-print("Hours Worked :", hours_worked)
-print("Standard Amount :", standard_amount)
-print("Over Time Amount :", ovr_time_amount)
-print("Gross Pay:", gross_pay)
-print("Total Tax :", total_tax)
-print("Your Net Pay :", net_pay)
+print("Hours Worked             :", hours_worked)
+print("Standard pay amount      :", standard_amount)
+print("Over-time pay amount     :", ovr_time_amount)
+print("Gross Pay                :", gross_pay)
+print("-------------------------------------------------------")
+print("Total Tax                :", total_tax)
+print("-------------------------------------------------------")
+print("Net Pay                  :", net_pay)
